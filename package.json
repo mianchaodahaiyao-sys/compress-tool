@@ -2,6 +2,7 @@
   "name": "compress-tool",
   "version": "1.0.0",
   "description": "批量压缩视频和图片工具",
+  "author": "mianchaodahaiyao-sys",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
