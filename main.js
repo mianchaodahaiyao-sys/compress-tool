@@ -91,7 +91,12 @@ function compressFile(ffmpegPath, inputPath, outputPath, isImage, imageQuality, 
   return new Promise((resolve, reject) => {
     let args
     if (isImage) {
-      args = ['-y', '-i', inputPath, '-q:v', String(imageQuality), outputPath]
+      const isPng = path.extname(inputPath).toLowerCase() === '.png'
+      if (isPng) {
+        args = ['-y', '-i', inputPath, '-compression_level', '9', outputPath]
+      } else {
+        args = ['-y', '-i', inputPath, '-q:v', String(imageQuality), outputPath]
+      }
     } else {
       args = ['-y', '-i', inputPath, '-b:v', videoBitrate + 'k', outputPath]
     }
