@@ -133,6 +133,7 @@ body {
 .param-row label { font-size: 12px; color: #aaaacc; }
 
 .hint { font-size: 10px; color: #4a4a70; }
+.checkbox-label { display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 12px; color: #aaaacc; }
 
 input[type="number"] {
   background: #111128;

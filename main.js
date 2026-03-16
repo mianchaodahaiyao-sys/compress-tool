@@ -67,8 +67,8 @@ ipcMain.handle('select-files', async () => {
     title: '选择要压缩的文件',
     properties: ['openFile', 'multiSelections'],
     filters: [
-      { name: '图片和视频', extensions: ['jpg','jpeg','png','webp','bmp','mp4','mov','avi','mkv','flv','wmv'] },
-      { name: '图片', extensions: ['jpg','jpeg','png','webp','bmp'] },
+      { name: '图片和视频', extensions: ['jpg','jpeg','png','mp4','mov','avi','mkv','flv','wmv'] },
+      { name: '图片', extensions: ['jpg','jpeg','png'] },
       { name: '视频', extensions: ['mp4','mov','avi','mkv','flv','wmv'] }
     ]
   })
@@ -87,12 +87,14 @@ ipcMain.on('compress-cancel', () => {
   if (currentProcess) currentProcess.kill()
 })
 
-function compressFile(ffmpegPath, inputPath, outputPath, isImage, imageQuality, videoBitrate) {
+function compressFile(ffmpegPath, inputPath, outputPath, isImage, imageQuality, videoBitrate, convertToWebP) {
   return new Promise((resolve, reject) => {
     let args
     if (isImage) {
       const isPng = path.extname(inputPath).toLowerCase() === '.png'
-      if (isPng) {
+      if (isPng && convertToWebP) {
+        args = ['-y', '-i', inputPath, '-quality', '85', outputPath]
+      } else if (isPng) {
         args = ['-y', '-i', inputPath, '-compression_level', '9', outputPath]
       } else {
         args = ['-y', '-i', inputPath, '-q:v', String(imageQuality), outputPath]
@@ -139,8 +141,8 @@ function compressFile(ffmpegPath, inputPath, outputPath, isImage, imageQuality, 
   })
 }
 
-ipcMain.handle('compress-start', async (_, { files, ffmpegPath, imageQuality, videoBitrate }) => {
-  const IMAGE_EXT = new Set(['jpg','jpeg','png','webp','bmp'])
+ipcMain.handle('compress-start', async (_, { files, ffmpegPath, imageQuality, videoBitrate, convertToWebP }) => {
+  const IMAGE_EXT = new Set(['jpg','jpeg','png'])
   cancelRequested = false
   isPaused = false
 
@@ -157,12 +159,14 @@ ipcMain.handle('compress-start', async (_, { files, ffmpegPath, imageQuality, vi
     const isImage = IMAGE_EXT.has(ext)
     const dir = path.dirname(filePath)
     const base = path.basename(filePath, path.extname(filePath))
-    const outputPath = path.join(dir, base + '_压缩' + path.extname(filePath))
+    const isPng = ext === 'png'
+    const outExt = (isPng && convertToWebP) ? '.webp' : path.extname(filePath)
+    const outputPath = path.join(dir, base + '_压缩' + outExt)
 
     mainWindow.webContents.send('compress-file-start', { index: i })
 
     try {
-      await compressFile(ffmpegPath, filePath, outputPath, isImage, imageQuality, videoBitrate)
+      await compressFile(ffmpegPath, filePath, outputPath, isImage, imageQuality, videoBitrate, convertToWebP)
       const outSize = fs.existsSync(outputPath) ? fs.statSync(outputPath).size : 0
       mainWindow.webContents.send('compress-file-done', { index: i, outputPath, outSize })
     } catch (err) {

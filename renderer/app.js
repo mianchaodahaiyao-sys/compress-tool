@@ -1,4 +1,4 @@
-const IMAGE_EXT = new Set(['jpg','jpeg','png','webp','bmp'])
+const IMAGE_EXT = new Set(['jpg','jpeg','png'])
 const VIDEO_EXT = new Set(['mp4','mov','avi','mkv','flv','wmv'])
 
 let fileList = []
@@ -20,8 +20,9 @@ const ctrlGroup     = document.getElementById('ctrl-group')
 const progressText  = document.getElementById('progress-text')
 const currentFileEl = document.getElementById('current-file')
 const progressBar   = document.getElementById('progress-bar')
-const imageQualityEl= document.getElementById('image-quality')
-const videoBitrateEl= document.getElementById('video-bitrate')
+const imageQualityEl  = document.getElementById('image-quality')
+const videoBitrateEl  = document.getElementById('video-bitrate')
+const convertWebpEl   = document.getElementById('convert-webp')
 
 // 初始化：检测 FFmpeg
 async function init() {
@@ -136,6 +137,7 @@ btnStart.addEventListener('click', async () => {
 
   const imageQuality = parseInt(imageQualityEl.value) || 12
   const videoBitrate = parseInt(videoBitrateEl.value) || 1024
+  const convertToWebP = convertWebpEl.checked
   let completed = 0
 
   window.api.removeAllListeners()
@@ -193,7 +195,8 @@ btnStart.addEventListener('click', async () => {
     files: fileList.map(f => f.path),
     ffmpegPath,
     imageQuality,
-    videoBitrate
+    videoBitrate,
+    convertToWebP
   })
 })
 
