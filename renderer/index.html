@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'">
+  <title>批量压缩工具</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 左侧文件列表 -->
+    <div class="left-panel">
+      <div id="drop-zone" class="drop-zone">
+        <div class="drop-hint">拖拽文件到此处，或点击右侧"添加文件"按钮</div>
+        <div id="file-list" class="file-list"></div>
+      </div>
+    </div>
+
+    <!-- 右侧控制面板 -->
+    <div class="right-panel">
+      <!-- FFmpeg 路径 -->
+      <div class="section">
+        <div class="section-title">FFmpeg 路径</div>
+        <div class="ffmpeg-row">
+          <span id="ffmpeg-status" class="ffmpeg-status error">未找到</span>
+          <button id="btn-select-ffmpeg" class="btn-sm">选择</button>
+        </div>
+      </div>
+
+      <!-- 图片设置 -->
+      <div class="section">
+        <div class="section-title">图片设置</div>
+        <div class="param-row">
+          <label>quality 值</label>
+          <span class="hint">1=最高质量 &nbsp; 31=最大压缩</span>
+          <input id="image-quality" type="number" min="1" max="31" value="12">
+        </div>
+      </div>
+
+      <!-- 视频设置 -->
+      <div class="section">
+        <div class="section-title">视频设置</div>
+        <div class="param-row">
+          <label>目标码率</label>
+          <div class="input-unit">
+            <input id="video-bitrate" type="number" min="100" value="1024">
+            <span>k</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 文件操作 -->
+      <div class="section">
+        <div class="btn-group">
+          <button id="btn-add" class="btn-secondary">添加文件</button>
+          <button id="btn-clear" class="btn-secondary">清空列表</button>
+        </div>
+      </div>
+
+      <!-- 压缩控制 -->
+      <div class="section compress-section">
+        <button id="btn-start" class="btn-primary">开始压缩</button>
+        <div id="ctrl-group" class="ctrl-group hidden">
+          <button id="btn-pause" class="btn-secondary">暂停</button>
+          <button id="btn-cancel" class="btn-danger">取消</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 底部进度栏 -->
+  <div class="footer">
+    <div class="progress-info">
+      <span id="progress-text">就绪</span>
+      <span id="current-file"></span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div id="progress-bar" class="progress-bar"></div>
+    </div>
+  </div>
+
+  <div class="brand">面朝大海出品</div>
+  <script src="app.js"></script>
+</body>
+</html>
