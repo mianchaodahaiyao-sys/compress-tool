@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder --win portable --publish never",
-    "build:mac": "electron-builder --mac dmg --publish never"
+    "build:mac": "electron-builder --mac dmg --universal --publish never"
   },
   "build": {
     "appId": "com.local.compress-tool",
