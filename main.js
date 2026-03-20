@@ -9,6 +9,7 @@ function getDefaultFfmpeg() {
     const p = path.join(process.resourcesPath, 'ffmpeg-static', `ffmpeg${ext}`)
     if (process.platform !== 'win32' && fs.existsSync(p)) {
       try { fs.chmodSync(p, 0o755) } catch {}
+      try { require('child_process').spawnSync('xattr', ['-dr', 'com.apple.quarantine', p]) } catch {}
     }
     return p
   }
