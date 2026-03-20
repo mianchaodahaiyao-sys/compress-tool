@@ -6,7 +6,11 @@ const fs = require('fs')
 function getDefaultFfmpeg() {
   const ext = process.platform === 'win32' ? '.exe' : ''
   if (app.isPackaged) {
-    return path.join(process.resourcesPath, 'ffmpeg-static', `ffmpeg${ext}`)
+    const p = path.join(process.resourcesPath, 'ffmpeg-static', `ffmpeg${ext}`)
+    if (process.platform !== 'win32' && fs.existsSync(p)) {
+      try { fs.chmodSync(p, 0o755) } catch {}
+    }
+    return p
   }
   try {
     const p = require('ffmpeg-static')

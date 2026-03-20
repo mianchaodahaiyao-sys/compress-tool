@@ -32,7 +32,7 @@ async function init() {
 
 function setFfmpegOk(p) {
   ffmpegPath = p
-  ffmpegStatus.textContent = 'ffmpeg.exe ✓'
+  ffmpegStatus.textContent = 'ffmpeg ✓'
   ffmpegStatus.className = 'ffmpeg-status ok'
   ffmpegStatus.title = p
 }
@@ -121,7 +121,7 @@ dropZone.addEventListener('drop', async (e) => {
 
 // 开始压缩
 btnStart.addEventListener('click', async () => {
-  if (!ffmpegPath) { alert('请先选择 ffmpeg.exe 路径'); return }
+  if (!ffmpegPath) { alert('请先选择 ffmpeg 路径'); return }
   if (fileList.length === 0) { alert('请先添加文件'); return }
 
   isRunning = true
